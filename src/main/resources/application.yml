@@ -1,0 +1,31 @@
+sharding:
+  jdbc:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/ds0?serverTimezone=UTC
+        username: root
+        password: jeonguk
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/ds1?serverTimezone=UTC
+        username: root
+        password: jeonguk
+    config:
+      sharding:
+        tables:
+          user:
+            database-strategy:
+              inline:
+                sharding-column: id
+                algorithm-expression: ds$->{id % 2}
+            table-strategy:
+              inline:
+                sharding-column: id
+                algorithm-expression: user$->{id % 3}
+            key-generator-column-name: _id
+
+logging:
+  level:
+    root: INFO
